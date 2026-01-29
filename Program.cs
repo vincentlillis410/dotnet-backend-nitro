@@ -59,10 +59,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.Configure<HttpsRedirectionOptions>(options =>
+if (!builder.Environment.IsDevelopment())
 {
-    options.HttpsPort = 443; // Change this to the port your app is listening on for HTTPS
-});
+    builder.Services.Configure<HttpsRedirectionOptions>(options =>
+    {
+        options.HttpsPort = 443;  // Ensure the right port is used
+    });
+}
 
 var app = builder.Build();
 
@@ -76,7 +79,14 @@ app.UseCors("AllowFrontend");
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+if (builder.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage(); // Use the developer page in development
+}
+else
+{
+    app.UseHttpsRedirection(); // Enable HTTPS redirection only in non-dev environments
+}
 app.MapControllers();
 
 app.Run();
