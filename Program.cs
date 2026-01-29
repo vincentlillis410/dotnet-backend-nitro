@@ -2,6 +2,7 @@ using System.Text;
 using AuthApi.Services;
 using AuthApi.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.IdentityModel.Tokens;
 
 
@@ -57,6 +58,11 @@ builder.Services.AddHttpClient<CaptchaService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.Configure<HttpsRedirectionOptions>(options =>
+{
+    options.HttpsPort = 443; // Change this to the port your app is listening on for HTTPS
+});
 
 var app = builder.Build();
 
